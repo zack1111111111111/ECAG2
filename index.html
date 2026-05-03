@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AG2 Cardiac Monitor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AG2 Cardiac</p>
+          <h1>Real-time ECG Monitor</h1>
+        </div>
+        <div class="status-cluster">
+          <div class="mode-switch" aria-label="User role mode">
+            <button class="mode-button active" data-mode="clinician" type="button">Clinician</button>
+            <button class="mode-button" data-mode="patient" type="button">Patient</button>
+          </div>
+          <div class="live-pill">
+            <span class="pulse-dot"></span>
+            Live replay
+          </div>
+          <div class="risk-pill" id="riskPill">Low risk</div>
+        </div>
+      </header>
+
+      <section class="hero-grid">
+        <div class="wave-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Lead ECG</p>
+              <h2 id="scenarioTitle">Normal Sinus Rhythm</h2>
+            </div>
+            <div class="time-readout">
+              <span id="positionText">0.0</span>s / 30s
+            </div>
+          </div>
+          <canvas id="ecgCanvas" width="1200" height="420" aria-label="Realtime ECG waveform"></canvas>
+        </div>
+
+        <aside class="side-panel">
+          <div class="metric-header">
+            <p class="panel-kicker">Live Cardiac Metrics</p>
+            <span id="sourceText">PhysioNet mitdb/100</span>
+          </div>
+          <div class="metric-grid">
+            <article class="metric-card" title="Heart Rate: beats per minute. Rapid increases may indicate cardiac stress or arrhythmia.">
+              <span>Heart Rate</span>
+              <strong><span id="heartRate">72</span> <em class="trend stable" id="heartRateTrend">0</em></strong>
+              <small id="heartRateUnit">bpm</small>
+            </article>
+            <article class="metric-card" title="Heart Rate Variability: lower HRV may indicate stress or cardiac instability.">
+              <span>HRV</span>
+              <strong><span id="hrv">42</span> <em class="trend stable" id="hrvTrend">0</em></strong>
+              <small id="hrvUnit">ms</small>
+            </article>
+            <article class="metric-card" title="R-peak amplitude: tracks the strength and clarity of detected ventricular depolarization peaks.">
+              <span>R-peak ampl.</span>
+              <strong><span id="rPeak">1.18</span> <em class="trend stable" id="rPeakTrend">0</em></strong>
+              <small id="rPeakUnit">mV</small>
+            </article>
+            <article class="metric-card" title="Sampling rate: number of ECG samples captured per second.">
+              <span>Sampling</span>
+              <strong id="sampleRate">360</strong>
+              <small>Hz</small>
+            </article>
+          </div>
+          <div class="record-box">
+            <div>
+              <span>Record</span>
+              <strong id="recordName">mitdb/100 MLII</strong>
+            </div>
+            <div>
+              <span>Ground Truth</span>
+              <strong id="truthText">Normal Sinus Rhythm</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="analysis-grid">
+        <div class="prob-panel">
+          <div class="panel-heading compact">
+            <div>
+              <p class="panel-kicker">Classifier Output</p>
+              <h2>Arrhythmia Probability</h2>
+            </div>
+          </div>
+          <div class="prob-list" id="probList"></div>
+        </div>
+
+        <div class="diagnosis-panel">
+          <div class="diagnosis-status" id="diagnosisStatus">Low Risk</div>
+          <p class="panel-kicker">AI Diagnosis</p>
+          <h2 id="diagnosisTitle">Normal rhythm detected</h2>
+
+          <div class="explain-block">
+            <span>Why</span>
+            <p id="diagnosisWhy">Stable morphology and clear R-peak cadence.</p>
+          </div>
+
+          <div class="explain-block action-block">
+            <span>Recommended Actions</span>
+            <ul id="actionList">
+              <li>Continue routine monitoring</li>
+            </ul>
+          </div>
+
+          <div class="confidence-block">
+            <div class="confidence-line">
+              <span>Confidence</span>
+              <strong id="confidenceText">86%</strong>
+            </div>
+            <div class="confidence-track" aria-label="Diagnosis confidence">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="control-bar" aria-label="Scenario controls">
+        <button class="scenario-button active" data-scenario="normal">Normal</button>
+        <button class="scenario-button" data-scenario="pvc">PVCs</button>
+        <button class="scenario-button" data-scenario="severe">Severe</button>
+        <button class="scenario-button critical" data-scenario="vf">VF</button>
+        <button class="icon-button" id="playButton" aria-label="Pause realtime replay" title="Pause realtime replay">Pause</button>
+        <button class="icon-button" id="resetButton" aria-label="Reset replay" title="Reset replay">Reset</button>
+      </nav>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
