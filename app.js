@@ -84,6 +84,9 @@ const playButton = document.querySelector("#playButton");
 const resetButton = document.querySelector("#resetButton");
 const diagnosisPanel = document.querySelector(".diagnosis-panel");
 const modeButtons = [...document.querySelectorAll(".mode-button")];
+const openEcgModal = document.querySelector("#openEcgModal");
+const closeEcgModal = document.querySelector("#closeEcgModal");
+const ecgModal = document.querySelector("#ecgModal");
 
 const state = {
   scenarioKey: "normal",
@@ -333,6 +336,20 @@ modeButtons.forEach((button) => {
     state.mode = button.dataset.mode;
     updateScenarioUI();
   });
+});
+
+openEcgModal.addEventListener("click", () => {
+  ecgModal.showModal();
+});
+
+closeEcgModal.addEventListener("click", () => {
+  ecgModal.close();
+});
+
+ecgModal.addEventListener("click", (event) => {
+  if (event.target === ecgModal) {
+    ecgModal.close();
+  }
 });
 
 window.addEventListener("resize", () => {

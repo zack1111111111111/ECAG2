@@ -26,6 +26,91 @@
         </div>
       </header>
 
+      <details class="education-panel">
+        <summary>
+          <span>What is ECG &amp; Why it matters</span>
+          <span class="summary-caret">open</span>
+        </summary>
+
+        <div class="education-content">
+          <section class="education-copy">
+            <div class="education-item">
+              <p class="panel-kicker">Problem</p>
+              <h2>Numbers alone do not explain cardiac risk.</h2>
+              <p>
+                Most health devices only show numbers. But numbers alone are not enough to understand cardiac risk.
+              </p>
+            </div>
+
+            <div class="education-item">
+              <p class="panel-kicker">What is ECG</p>
+              <h2>ECG captures the electrical activity of the heart, not just the pulse.</h2>
+              <p>
+                This allows detection of irregular rhythms, conduction abnormalities, and early signs of arrhythmia.
+              </p>
+              <strong class="key-line">Heart rate tells you "how fast". ECG tells you "how healthy".</strong>
+            </div>
+
+            <div class="education-columns">
+              <div class="education-item">
+                <p class="panel-kicker">Industry Gap</p>
+                <h2>Existing products record data. They rarely explain risk.</h2>
+                <ul>
+                  <li>Apple Watch / Fitbit: data recording</li>
+                  <li>Limited interpretation</li>
+                  <li>Reactive alerts</li>
+                </ul>
+              </div>
+              <div class="education-item highlight">
+                <p class="panel-kicker">Our System</p>
+                <h2>Real-time ECG risk monitoring.</h2>
+                <ul>
+                  <li>Real-time ECG analysis</li>
+                  <li>AI-driven interpretation</li>
+                  <li>Early risk prediction</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="education-columns">
+              <div class="education-item">
+                <p class="panel-kicker">For Individuals</p>
+                <ul>
+                  <li>Understand heart condition in real time</li>
+                  <li>Get actionable health guidance</li>
+                  <li>Detect risks earlier</li>
+                </ul>
+              </div>
+              <div class="education-item">
+                <p class="panel-kicker">For Healthcare Providers</p>
+                <ul>
+                  <li>Monitor patients remotely</li>
+                  <li>Reduce manual analysis workload</li>
+                  <li>Improve response efficiency</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <button class="ecg-compare" id="openEcgModal" type="button" aria-label="Open ECG versus heart rate explanation">
+            <span class="compare-title">Heart Rate vs ECG</span>
+            <span class="compare-row">
+              <span class="compare-label">Heart rate</span>
+              <span class="pulse-visual"></span>
+              <span class="compare-note">Speed</span>
+            </span>
+            <span class="compare-row">
+              <span class="compare-label">ECG</span>
+              <svg class="mini-ecg" viewBox="0 0 220 54" role="img" aria-label="Stylized ECG waveform">
+                <polyline points="0,34 34,34 43,29 51,39 61,10 72,43 84,34 126,34 136,28 146,38 157,12 168,44 180,34 220,34" />
+              </svg>
+              <span class="compare-note">Health</span>
+            </span>
+            <span class="compare-link">Click for details</span>
+          </button>
+        </div>
+      </details>
+
       <section class="hero-grid">
         <div class="wave-panel">
           <div class="panel-heading">
@@ -129,6 +214,31 @@
         <button class="icon-button" id="resetButton" aria-label="Reset replay" title="Reset replay">Reset</button>
       </nav>
     </main>
+
+    <dialog class="ecg-modal" id="ecgModal">
+      <div class="modal-card">
+        <button class="modal-close" id="closeEcgModal" type="button" aria-label="Close ECG explanation">Close</button>
+        <p class="panel-kicker">ECG Interpretation</p>
+        <h2>ECG looks at cardiac electrical patterns, not only pulse speed.</h2>
+        <p>
+          A heart rate value can look normal while the electrical rhythm is abnormal. ECG adds waveform morphology,
+          beat timing, and conduction pattern, which helps detect irregular rhythms, conduction abnormalities, and
+          early arrhythmia signals.
+        </p>
+        <div class="modal-compare-grid">
+          <div>
+            <span>Heart Rate</span>
+            <strong>How fast?</strong>
+            <p>Useful for tracking beats per minute, but limited for understanding rhythm quality.</p>
+          </div>
+          <div>
+            <span>ECG</span>
+            <strong>How healthy?</strong>
+            <p>Shows electrical activity, rhythm regularity, QRS morphology, and early risk patterns.</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
 
     <script src="app.js"></script>
   </body>
