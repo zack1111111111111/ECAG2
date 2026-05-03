@@ -195,7 +195,7 @@ class ECGRealtimeDemo:
             4, 2,
             height_ratios=[2.2, 1.5, 0.7, 0.5],
             width_ratios=[2, 1],
-            hspace=0.65, wspace=0.3,
+            hspace=0.45, wspace=0.3,
         )
 
         # ---- Panel 1: Scrolling ECG ----
@@ -218,28 +218,8 @@ class ECGRealtimeDemo:
         self.ax_signal.grid(True, alpha=0.3)
         self.ax_signal.axhline(0, color="gray", linewidth=0.5, alpha=0.5)
 
-        # ---- Panel 2 left: Classification block ----
-        # Split into two sub-axes:
-        #   top    : banner showing agent diagnosis (or hint to press A)
-        #   bottom : probability bars
-        gs_left = gs[1, 0].subgridspec(2, 1, height_ratios=[0.30, 1.0],
-                                       hspace=0.55)
-
-        # ---- Banner (top) ----
-        self.ax_banner = self.fig.add_subplot(gs_left[0])
-        self.ax_banner.axis("off")
-        self.text_banner = self.ax_banner.text(
-            0.5, 0.5,
-            "Press [A] for AI team diagnosis",
-            fontsize=11, fontweight="bold",
-            verticalalignment="center", horizontalalignment="center",
-            bbox=dict(boxstyle="round,pad=0.4",
-                      facecolor="#dddddd", edgecolor="#888888", alpha=0.8),
-            transform=self.ax_banner.transAxes,
-        )
-
-        # ---- Probability bars (bottom) ----
-        self.ax_probs = self.fig.add_subplot(gs_left[1])
+        # ---- Panel 2 left: Classification probabilities ----
+        self.ax_probs = self.fig.add_subplot(gs[1, 0])
         self.bars = self.ax_probs.barh(
             range(N_CLASSES),
             [0.0] * N_CLASSES,
@@ -249,11 +229,8 @@ class ECGRealtimeDemo:
         self.ax_probs.set_yticklabels(CLASS_LABELS)
         self.ax_probs.set_xlim(0, 1.0)
         self.ax_probs.set_xlabel("Probability")
-        # Title text will be updated dynamically with ground truth
-        self.ax_probs.set_title(
-            "Cardiac Rhythm Classification",
-            fontweight="bold"
-        )
+        self.ax_probs.set_title("Cardiac Rhythm Classification",
+                                fontweight="bold")
         self.ax_probs.grid(True, alpha=0.3, axis="x")
         self.ax_probs.invert_yaxis()  # most-critical class on top
 
@@ -339,68 +316,6 @@ class ECGRealtimeDemo:
             f"position  : {pos_s:5.1f} / {total_s} s\n"
             f"GT label  : {sc['diagnosis']}"
         )
-
-    # --------------------------------------------------------
-    # Banner above probability bars
-    # --------------------------------------------------------
-    def _update_banner(self, sc):
-        """
-        Update the banner above the probability bars based on current
-        agent state. Three modes:
-          - idle      : grey hint text "Press [A] for AI team diagnosis"
-          - running   : amber text "🤖 Cardiac team consulting..."
-          - completed : colored banner with agent's final diagnosis
-        """
-        if self.agent_running:
-            self.text_banner.set_text("🤖 Cardiac team consulting...")
-            self.text_banner.set_bbox(dict(
-                boxstyle="round,pad=0.4",
-                facecolor="#fff3cd", edgecolor="#856404", alpha=0.9,
-            ))
-            self.text_banner.set_color("#856404")
-            return
-
-        if self.last_agent_result is not None and not self.last_agent_result.get("error"):
-            p = self.last_agent_result["parsed"]
-            ai_dx = p.get("diagnosis", "Indeterminate")
-            risk  = p.get("risk_level", "?")
-
-            # Find the matching class in CLASS_ORDER to pick its color
-            face_color = "#cccccc"
-            edge_color = "#666666"
-            text_color = "#000000"
-            for i, label in enumerate(CLASS_LABELS):
-                if label.lower().split()[0] in ai_dx.lower():
-                    face_color = CLASS_COLORS[i]
-                    text_color = "#ffffff"
-                    edge_color = "#222222"
-                    break
-
-            self.text_banner.set_text(
-                f"🩺 AI Team Diagnosis: {ai_dx.upper()}   (risk: {risk})"
-            )
-            self.text_banner.set_bbox(dict(
-                boxstyle="round,pad=0.4",
-                facecolor=face_color, edgecolor=edge_color, alpha=0.9,
-            ))
-            self.text_banner.set_color(text_color)
-            return
-
-        # Idle / error state
-        if self.last_agent_result is not None and self.last_agent_result.get("error"):
-            self.text_banner.set_text(f"⚠ Agent error — see cmd")
-            self.text_banner.set_bbox(dict(
-                boxstyle="round,pad=0.4",
-                facecolor="#f8d7da", edgecolor="#721c24", alpha=0.9,
-            ))
-            self.text_banner.set_color("#721c24")
-        else:
-            self.text_banner.set_text("Press [A] for AI team diagnosis")
-            self.text_banner.set_bbox(dict(
-                boxstyle="round,pad=0.4",
-                facecolor="#dddddd", edgecolor="#888888", alpha=0.8,
-            ))
-            self.text_banner.set_color("#333333")
 
     # --------------------------------------------------------
     # DSP + classification (called every 0.5 s)
@@ -533,16 +448,6 @@ class ECGRealtimeDemo:
             else:
                 self.bars[i].set_color("#cccccc")
 
-        # Probability panel title shows ground truth for the current scenario
-        self.ax_probs.set_title(
-            f"Cardiac Rhythm Classification   |   "
-            f"Ground Truth: {sc['diagnosis']}",
-            fontweight="bold"
-        )
-
-        # Banner above probabilities: reflects current agent state
-        self._update_banner(sc)
-
         # Metrics panel: every 2 s
         if self.frame_count % self.frames_per_metrics == 0:
             self.text_metrics.set_text(
@@ -610,138 +515,105 @@ class ECGRealtimeDemo:
     # --------------------------------------------------------
     def _trigger_agent_consultation(self):
         """
-        Build a feature bundle from the FULL recorded scenario (30 s) and
-        dispatch the cardiac team in a background thread. The animation
-        thread polls self.last_agent_result on each frame and updates
-        Panel 4 / banner when the result arrives.
-
-        Note: the agent uses a longer window than the realtime panel
-        (whole 30 s vs the 5 s realtime feature window). The realtime
-        panel needs low latency for VF detection; the agent benefits
-        from a statistically stable, long-window view.
+        Build a feature bundle from the most recent DSP run and dispatch
+        the cardiac team in a background thread. The animation thread
+        polls self.last_agent_result on each frame and updates Panel 4
+        when the result arrives.
         """
         if self.agent_running:
             print("⏳ Agent team is already running; please wait...")
             return
 
-        sc = self.scenarios[self.current_name]
-        ecg_full = sc["ecg"]
-        fs       = sc["fs"]
-
-        # Run Pan-Tompkins on the FULL 30-second record (not the 5 s
-        # realtime feature window). This is what the user is asking for:
-        # the agent should see the most stable, long-window features.
-        try:
-            pt = pan_tompkins(ecg_full, fs)
-        except Exception as e:
-            print(f"⚠ Pan-Tompkins failed on full record: {e}")
+        if self.last_classification is None:
+            print("⚠ No features available yet; let DSP run for a few seconds first.")
             return
 
-        rr_s     = pt["rr_intervals_s"]
-        r_peaks  = pt["r_peaks"]
-        hr       = pt["heart_rate_bpm"]
-        hrv      = pt["hrv_sdnn_ms"]
+        # Build feature bundle from the most recent DSP output
+        sc = self.scenarios[self.current_name]
+        cl = self.last_classification
+        feats = cl["features"]
 
-        # Rhythm CV + ectopic ratio (over the FULL record now)
-        if len(rr_s) >= 2:
-            rr_cv = float(np.std(rr_s) / np.mean(rr_s))
-        else:
-            rr_cv = 0.0
+        # Recompute RR intervals from the most recent feature window for
+        # the agent to see. (We don't keep the array around, so re-run
+        # the slim part of the pipeline here.)
+        ecg_full = sc["ecg"]
+        fs = sc["fs"]
+        end   = self.playback_pos
+        start = max(0, end - self.feature_samples)
+        feature_window = ecg_full[start:end]
 
-        if len(rr_s) >= 3:
-            median_rr = float(np.median(rr_s))
-            deviations = np.abs(rr_s - median_rr) / median_rr
-            ectopic_ratio = float(np.sum(deviations > 0.20) / len(rr_s))
-        else:
-            ectopic_ratio = 0.0
-
-        # R-peak amplitude (over full record)
-        if len(r_peaks) > 0:
-            r_amp = float(np.mean(np.abs(ecg_full[r_peaks])))
-        else:
-            r_amp = float("nan")
-
-        # RR intervals in ms, full series (truncate display in agent prompt)
-        rr_ms = (rr_s * 1000.0).tolist()
+        try:
+            pt = pan_tompkins(feature_window, fs)
+            rr_ms = (pt["rr_intervals_s"] * 1000.0).tolist()
+        except Exception:
+            rr_ms = []
 
         feature_bundle = {
-            "hr_bpm":          hr,
-            "hrv_sdnn_ms":     hrv,
-            "rr_cv":           rr_cv,
-            "ectopic_ratio":   ectopic_ratio,
-            "n_r_peaks":       int(len(r_peaks)),
-            "r_amp_mV":        r_amp,
+            "hr_bpm":          feats["hr_bpm"],
+            "hrv_sdnn_ms":     feats["hrv_sdnn_ms"],
+            "rr_cv":           feats["rr_cv"],
+            "ectopic_ratio":   feats["ectopic_ratio"],
+            "n_r_peaks":       len(self.last_r_peaks_global),
+            "r_amp_mV":        self.smoothed_r_amp,
             "rr_intervals_ms": rr_ms,
             "fs":              fs,
-            "window_s":        int(sc["duration_s"]),  # tells agent it's a 30s window
+            "window_s":        int(self.feature_duration_s),
             "scenario_source": sc["source"],
         }
 
         self.agent_running     = True
         self.last_agent_result = None
+        self.agent_status_text = "🤖 Cardiac team is consulting... (cmd terminal shows live transcript)"
 
         def worker():
             try:
                 result = run_cardiac_team(feature_bundle, verbose=True)
             except Exception as e:
                 result = {
-                    "transcript":    [],
+                    "transcript":   [],
                     "final_message": "",
-                    "parsed":        {"diagnosis": "Error",
-                                      "risk_level": "unknown",
-                                      "reasoning": str(e),
-                                      "recommendation": "—"},
-                    "error":         f"{type(e).__name__}: {e}",
+                    "parsed":       {"diagnosis": "Error", "risk_level": "unknown",
+                                     "reasoning": str(e), "recommendation": "—"},
+                    "error":        f"{type(e).__name__}: {e}",
                 }
             self.last_agent_result = result
             self.agent_running     = False
 
         self.agent_thread = threading.Thread(target=worker, daemon=True)
         self.agent_thread.start()
-        print(f"\n[A] pressed — dispatching cardiac team "
-              f"(analyzing full {sc['duration_s']}s record)...")
+        print("\n[A] pressed — dispatching cardiac team in background...")
 
     # --------------------------------------------------------
     # Keyboard handling
     # --------------------------------------------------------
     def on_key(self, event):
-        key = event.key or ""
+        # DEBUG: print every key event so we can see exactly what
+        # matplotlib delivers to us. Remove after demo if noisy.
+        print(f"[key] received event.key = {event.key!r}")
 
         # Quit
-        if key in ("q", "Q"):
+        if event.key in ("q", "Q"):
             print("Bye.")
             plt.close(self.fig)
             return
 
         # Pause / resume
-        if key == " ":
+        if event.key == " ":
             self.paused = not self.paused
             print("⏸ Paused" if self.paused else "▶ Resumed")
             return
 
         # Scenario switch (1-4)
-        if key in "1234":
-            idx = int(key) - 1
+        if event.key in "1234":
+            idx = int(event.key) - 1
             scenario_names = [name for _, name in SCENARIO_FILES]
             if 0 <= idx < len(scenario_names):
                 self._switch_scenario(scenario_names[idx], reset=True)
             return
 
-        # Agent consultation — accept literal a/A AND fall back to '??' /
-        # other garbled keys produced by Chinese IME interference.
-        if key.lower() in ("a", "alt+a", "ctrl+a"):
-            self._trigger_agent_consultation()
-            return
-
-        # IME-garbled fallback: treat any unknown short key as A.
-        IGNORED = {"shift", "ctrl", "alt", "super", "control",
-                   "shift+??", "ctrl+??", "alt+??",
-                   "escape", "tab", "enter", "return",
-                   "left", "right", "up", "down",
-                   "backspace", "delete", "home", "end",
-                   "pageup", "pagedown", "f1", "f2", "f3", "f4",
-                   "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12"}
-        if key and key.lower() not in IGNORED:
+        # Agent consultation — accept many A-key variants to be robust to
+        # caps lock / shift / IME edge cases.
+        if event.key and event.key.lower() in ("a", "alt+a", "ctrl+a"):
             self._trigger_agent_consultation()
             return
 

@@ -1,0 +1,26 @@
+# Secrets
+.env
+*.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+agents/__pycache__/
+algorithms/__pycache__/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PhysioNet raw downloads (regeneratable)
+data/raw/
+
+# Old experimental versions
+agents/archive/
+tools/Archive/

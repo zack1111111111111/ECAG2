@@ -97,16 +97,10 @@ def build_scenario(record_id, db, start_s, duration_s, out_name, diagnosis):
     # Decide window start
     if start_s is None:  # auto-detect (vfdb VF onset)
         vf_sample = find_vf_onset(record_id, db, raw_dir)
-        # Start 15 seconds AFTER VF onset to capture fully-developed VF
-        # (the pre-onset deterioration period is interesting clinically
-        # — polymorphic VT degenerating into VF — but agents looking at
-        # short feature windows during that period correctly identify it
-        # as severe arrhythmia, not VF. To make the demo align cleanly
-        # with the "Ventricular Fibrillation" ground truth label, we
-        # start the window inside the stable VF episode.)
-        start_sample = vf_sample + 15 * fs
+        # Start 10 seconds BEFORE VF onset to capture deterioration arc
+        start_sample = max(0, vf_sample - 10 * fs)
         print(f"  VF onset at sample {vf_sample} ({vf_sample/fs:.1f}s); "
-              f"window starts {15}s later at sample {start_sample}")
+              f"window starts {10}s earlier at sample {start_sample}")
     else:
         start_sample = int(start_s * fs)
 
