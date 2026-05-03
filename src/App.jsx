@@ -212,7 +212,7 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-[#081013] px-4 py-5 font-sans text-white sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#F6F7F4] px-4 py-5 font-sans text-[#0B0B0B] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <Header connected={connected} />
         <StepNav currentStep={step} setStep={setStep} />
@@ -258,18 +258,20 @@ function App() {
 
 function Header({ connected }) {
   return (
-    <header className="mb-5 flex flex-col justify-between gap-4 rounded-[2rem] border border-white/10 bg-white/[0.06] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.25)] backdrop-blur md:flex-row md:items-center">
+    <header className="mb-5 flex flex-col justify-between gap-4 rounded-[2rem] bg-white p-5 shadow-[0_18px_50px_rgba(24,28,25,0.08)] md:flex-row md:items-center">
       <div className="flex items-center gap-3">
-        <span className="grid size-12 place-items-center rounded-full bg-[#24f2bd]/15 text-[#24f2bd]">
+        <span className="grid size-12 place-items-center rounded-full bg-[#D9F2C7] text-[#0B0B0B]">
           <HeartPulse size={24} strokeWidth={2.4} />
         </span>
         <div>
-          <h1 className="text-2xl font-black tracking-[-0.04em]">ECAG2 Health Dashboard</h1>
-          <p className="text-sm font-semibold text-slate-400">3-step ECG research demo prototype</p>
+          <h1 className="text-2xl font-black tracking-[-0.04em]">ECG Health</h1>
+          <p className="text-sm font-semibold text-[#6A706D]">
+            GitHub ECG data powered heart monitoring demo
+          </p>
         </div>
       </div>
-      <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-black text-slate-200">
-        <span className={`size-2 rounded-full ${connected ? "bg-[#24f2bd]" : "bg-[#facc15]"}`} />
+      <div className="flex items-center gap-2 rounded-full bg-[#F7F7F7] px-4 py-2 text-sm font-black text-[#5F6368]">
+        <span className={`size-2 rounded-full ${connected ? "bg-[#0B0B0B]" : "bg-[#facc15]"}`} />
         {connected ? "GitHub data" : "Demo data"}
       </div>
     </header>
@@ -278,7 +280,7 @@ function Header({ connected }) {
 
 function StepNav({ currentStep, setStep }) {
   return (
-    <nav className="mb-6 grid gap-3 md:grid-cols-3" aria-label="Dashboard steps">
+    <nav className="mb-6 grid gap-3 rounded-[2rem] bg-white p-2 shadow-[0_16px_45px_rgba(24,28,25,0.06)] md:grid-cols-3" aria-label="Dashboard steps">
       {stepItems.map((item) => {
         const Icon = item.icon;
         const active = currentStep === item.id;
@@ -287,21 +289,21 @@ function StepNav({ currentStep, setStep }) {
             key={item.id}
             type="button"
             onClick={() => setStep(item.id)}
-            className={`flex items-center gap-3 rounded-[1.5rem] border p-4 text-left transition ${
+            className={`flex items-center gap-3 rounded-[1.5rem] p-4 text-left transition ${
               active
-                ? "border-[#24f2bd]/50 bg-[#24f2bd]/15 shadow-[0_16px_42px_rgba(36,242,189,0.10)]"
-                : "border-white/10 bg-white/[0.055] hover:border-white/20"
+                ? "bg-[#0B0B0B] text-white shadow-[0_16px_42px_rgba(20,20,20,0.12)]"
+                : "bg-[#F7F7F7] text-[#5F6368] hover:bg-[#EFF1EE]"
             }`}
           >
             <span
               className={`grid size-11 place-items-center rounded-full ${
-                active ? "bg-[#24f2bd] text-[#071113]" : "bg-white/10 text-slate-300"
+                active ? "bg-[#0B0B0B] text-white" : "bg-white/10 text-[#323735]"
               }`}
             >
               <Icon size={20} strokeWidth={2.4} />
             </span>
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Step {item.id}</p>
+              <p className={`text-xs font-black uppercase tracking-[0.16em] ${active ? "text-white/55" : "text-[#6A706D]"}`}>Step {item.id}</p>
               <p className="font-black">{item.label}</p>
             </div>
           </button>
@@ -317,11 +319,10 @@ function PatientProfileStep({ patient, setPatient, bmi, bmiStatus, onContinue })
       <Panel>
         <SectionKicker icon={UserRound} label="Patient Profile" />
         <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
-          Enter basic patient information.
+          Tell us about the patient.
         </h2>
-        <p className="mt-3 max-w-2xl text-base leading-7 text-slate-400">
-          This profile is shared across the monitor and report steps. BMI updates in real time as
-          height and weight change.
+        <p className="mt-3 max-w-2xl text-base leading-7 text-[#6A706D]">
+          Basic biometric information helps personalize the ECG demo experience.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -354,7 +355,7 @@ function PatientProfileStep({ patient, setPatient, bmi, bmiStatus, onContinue })
                 type="number"
                 className="input pr-14"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-500">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-[#7A807C]">
                 cm
               </span>
             </div>
@@ -368,14 +369,14 @@ function PatientProfileStep({ patient, setPatient, bmi, bmiStatus, onContinue })
                 type="number"
                 className="input pr-14"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-500">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-[#7A807C]">
                 kg
               </span>
             </div>
           </Field>
         </div>
 
-        <button type="button" onClick={onContinue} className="mt-8 rounded-full bg-[#24f2bd] px-7 py-4 font-black text-[#071113]">
+        <button type="button" onClick={onContinue} className="mt-8 rounded-full bg-[#0B0B0B] px-7 py-4 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#1B1B1B]">
           Continue to Monitor
         </button>
       </Panel>
@@ -389,8 +390,14 @@ function MonitorStep({ patient, bmi, bmiStatus, scenarios, activeScenario, activ
   const vitals = useLiveVitals(activeScenario);
 
   return (
-    <section className="grid gap-5 xl:grid-cols-[320px_1fr]">
-      <div className="grid gap-5">
+    <section>
+      <div className="mb-6">
+        <p className="text-sm font-black uppercase tracking-[0.18em] text-[#6A706D]">Step 2</p>
+        <h2 className="mt-2 text-5xl font-black tracking-[-0.055em]">Patient Monitor</h2>
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-[320px_1fr]">
+      <div className="grid gap-5 content-start">
         <PatientSummaryCard patient={patient} bmi={bmi} bmiStatus={bmiStatus} />
         <Panel>
           <SectionKicker icon={Activity} label="Live Vitals" />
@@ -404,22 +411,22 @@ function MonitorStep({ patient, bmi, bmiStatus, scenarios, activeScenario, activ
       </div>
 
       <div className="grid gap-5">
-        <Panel className="bg-[#050b0d]">
+        <Panel className="bg-[#BFEFF4]">
           <div className="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-start">
             <div>
-              <SectionKicker icon={MonitorDot} label="Patient Monitor" />
+              <SectionKicker icon={MonitorDot} label="Heartbeat" />
               <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
                 {activeScenario.rhythm}
               </h2>
-              <p className="mt-2 text-sm font-semibold text-slate-400">{activeScenario.diagnosis}</p>
+              <p className="mt-2 text-sm font-semibold text-[#6A706D]">{activeScenario.diagnosis}</p>
             </div>
             <span
               className={`rounded-full px-4 py-2 text-sm font-black ${
                 activeScenario.id === "vf"
                   ? "bg-red-500/20 text-red-200"
-                  : activeScenario.id === "normal"
-                    ? "bg-[#24f2bd]/15 text-[#24f2bd]"
-                    : "bg-yellow-400/15 text-yellow-200"
+                : activeScenario.id === "normal"
+                    ? "bg-[#D9F2C7] text-[#0B0B0B]"
+                    : "bg-white/65 text-[#0B0B0B]"
               }`}
             >
               {activeScenario.id === "vf" ? "Critical" : activeScenario.status}
@@ -440,10 +447,11 @@ function MonitorStep({ patient, bmi, bmiStatus, scenarios, activeScenario, activ
         </div>
 
         <div className="flex justify-end">
-          <button type="button" onClick={onContinue} className="rounded-full bg-[#24f2bd] px-7 py-4 font-black text-[#071113]">
+          <button type="button" onClick={onContinue} className="rounded-full bg-[#0B0B0B] px-7 py-4 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#1B1B1B]">
             Go to Analysis
           </button>
         </div>
+      </div>
       </div>
     </section>
   );
@@ -456,11 +464,17 @@ function AnalysisReportStep({ patient, bmi, bmiStatus, activeScenario, connected
     : fallbackScenarios.find((scenario) => scenario.id === activeScenario.id)?.annotations || [];
 
   return (
-    <section className="grid gap-5 xl:grid-cols-[1fr_0.95fr]">
-      <Panel>
+    <section>
+      <div className="mb-6">
+        <p className="text-sm font-black uppercase tracking-[0.18em] text-[#6A706D]">Step 3</p>
+        <h2 className="mt-2 text-5xl font-black tracking-[-0.055em]">Diagnostics</h2>
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-[1fr_0.95fr]">
+      <Panel className="bg-[#BFEFF4]">
         <SectionKicker icon={BrainCircuit} label="AI Analysis" />
         <h2 className="mt-4 text-4xl font-black tracking-[-0.05em]">Analysis summary</h2>
-        <p className="mt-4 rounded-[1.5rem] border border-[#24f2bd]/20 bg-[#24f2bd]/10 p-5 text-lg font-bold leading-8 text-[#d9fff4]">
+        <p className="mt-4 rounded-[1.5rem] bg-white/55 p-5 text-lg font-bold leading-8 text-[#17201d]">
           {profile.summary}
         </p>
 
@@ -473,22 +487,22 @@ function AnalysisReportStep({ patient, bmi, bmiStatus, activeScenario, connected
 
         <div className="mt-7">
           <h3 className="text-xl font-black">Detected Events</h3>
-          <div className="mt-3 overflow-hidden rounded-[1.5rem] border border-white/10">
+          <div className="mt-3 overflow-hidden rounded-[1.5rem] bg-white/55">
             {annotations.map((annotation, index) => (
               <div
                 key={`${annotation.sample}-${index}`}
-                className="grid grid-cols-[1fr_1fr_1fr] gap-3 border-b border-white/10 bg-white/[0.035] px-4 py-3 text-sm last:border-b-0"
+                className="grid grid-cols-[1fr_1fr_1fr] gap-3 border-b border-black/5 px-4 py-3 text-sm last:border-b-0"
               >
-                <span className="font-bold text-slate-400">sample {annotation.sample}</span>
+                <span className="font-bold text-[#6A706D]">sample {annotation.sample}</span>
                 <span className="font-black">{annotation.symbol}</span>
-                <span className="text-slate-300">{annotation.aux || `t=${annotation.time}s`}</span>
+                <span className="text-[#323735]">{annotation.aux || `t=${annotation.time}s`}</span>
               </div>
             ))}
           </div>
         </div>
       </Panel>
 
-      <Panel>
+      <Panel className="bg-white">
         <SectionKicker icon={FileText} label="Data Report" />
         <h2 className="mt-4 text-4xl font-black tracking-[-0.05em]">Patient & ECG report</h2>
 
@@ -507,7 +521,7 @@ function AnalysisReportStep({ patient, bmi, bmiStatus, activeScenario, connected
           <ReportRow label="API status" value={connected ? "GitHub data" : "Demo data"} />
         </div>
 
-        <p className="mt-5 rounded-[1.4rem] border border-yellow-300/20 bg-yellow-300/10 p-4 text-sm font-semibold leading-6 text-yellow-100">
+        <p className="mt-5 rounded-[1.4rem] bg-[#FFE680]/55 p-4 text-sm font-semibold leading-6 text-[#3A3521]">
           This dashboard is a research and demo visualization only. It is not a certified medical
           device and should not be used as a formal medical diagnosis.
         </p>
@@ -515,12 +529,13 @@ function AnalysisReportStep({ patient, bmi, bmiStatus, activeScenario, connected
         <button
           type="button"
           onClick={copyReport}
-          className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#24f2bd] px-6 py-4 font-black text-[#071113]"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#0B0B0B] px-6 py-4 font-black text-white transition hover:-translate-y-0.5 hover:bg-[#1B1B1B]"
         >
           {copied ? <Check size={18} /> : <Clipboard size={18} />}
           {copied ? "Copied!" : "Copy Report"}
         </button>
       </Panel>
+      </div>
     </section>
   );
 }
@@ -568,29 +583,29 @@ function ECGMonitor({ scenario }) {
   }, [cursor, scenario.ecg]);
 
   return (
-    <div className="relative overflow-hidden rounded-[1.7rem] border border-[#24f2bd]/20 bg-[#031a17] p-4 shadow-[inset_0_0_70px_rgba(36,242,189,0.06)]">
+    <div className="relative overflow-hidden rounded-[1.7rem] bg-white/55 p-4">
       <svg viewBox="0 0 900 280" className="h-[320px] w-full" role="img" aria-label="Realtime ECG waveform">
         <defs>
           <pattern id="monitorGrid" width="36" height="36" patternUnits="userSpaceOnUse">
-            <path d="M 36 0 L 0 0 0 36" fill="none" stroke="rgba(36,242,189,0.11)" strokeWidth="1" />
+            <path d="M 36 0 L 0 0 0 36" fill="none" stroke="rgba(11,11,11,0.08)" strokeWidth="1" />
           </pattern>
           <linearGradient id="scanGlow" x1="0" x2="1">
-            <stop offset="0%" stopColor="rgba(36,242,189,0)" />
-            <stop offset="55%" stopColor="rgba(36,242,189,0.34)" />
-            <stop offset="100%" stopColor="rgba(36,242,189,0)" />
+            <stop offset="0%" stopColor="rgba(19,122,91,0)" />
+            <stop offset="55%" stopColor="rgba(19,122,91,0.18)" />
+            <stop offset="100%" stopColor="rgba(19,122,91,0)" />
           </linearGradient>
         </defs>
         <rect width="900" height="280" rx="22" fill="url(#monitorGrid)" />
-        <line x1="0" x2="900" y1="142" y2="142" stroke="rgba(36,242,189,0.18)" strokeWidth="2" />
+        <line x1="0" x2="900" y1="142" y2="142" stroke="rgba(11,11,11,0.12)" strokeWidth="2" />
         <rect x={(cursor % 100) * 9 - 80} y="0" width="130" height="280" fill="url(#scanGlow)" opacity="0.65" />
         <polyline
           fill="none"
           points={points}
-          stroke="#24f2bd"
+          stroke="#137A5B"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="4"
-          filter="drop-shadow(0 0 8px rgba(36,242,189,0.75))"
+          filter="drop-shadow(0 0 5px rgba(19,122,91,0.25))"
         />
       </svg>
     </div>
@@ -598,20 +613,28 @@ function ECGMonitor({ scenario }) {
 }
 
 function ScenarioCard({ scenario, selected, onClick }) {
+  const cardColor =
+    scenario.id === "normal"
+      ? "bg-[#D9F2C7]"
+      : scenario.id === "lbbb"
+        ? "bg-[#BFEFF4]"
+        : scenario.id === "pvc"
+          ? "bg-[#FFE680]"
+          : "bg-[#F7D7DF]";
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-[1.5rem] border p-4 text-left transition ${
+      className={`rounded-[1.75rem] p-5 text-left shadow-[0_16px_42px_rgba(24,28,25,0.06)] transition hover:-translate-y-0.5 ${
         selected
-          ? "border-[#24f2bd]/70 bg-[#24f2bd]/15"
-          : "border-white/10 bg-white/[0.055] hover:border-white/20"
+          ? `${cardColor} ring-2 ring-[#0B0B0B]`
+          : "bg-white hover:bg-[#F9FAF7]"
       }`}
     >
-      <p className="text-sm font-black uppercase tracking-[0.15em] text-slate-400">{scenario.id}</p>
+      <p className="text-sm font-black uppercase tracking-[0.15em] text-[#6A706D]">{scenario.id}</p>
       <h3 className="mt-2 text-lg font-black">{scenario.rhythm}</h3>
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-sm font-semibold text-slate-400">Risk</span>
+        <span className="text-sm font-semibold text-[#6A706D]">Risk</span>
         <span className="font-black text-[#24f2bd]">{scenario.risk}</span>
       </div>
     </button>
@@ -620,7 +643,7 @@ function ScenarioCard({ scenario, selected, onClick }) {
 
 function PatientSummaryCard({ patient, bmi, bmiStatus, large = false }) {
   return (
-    <Panel className={large ? "min-h-full" : ""}>
+    <Panel className={`${large ? "min-h-full" : ""} bg-[#D9F2C7]`}>
       <SectionKicker icon={UserRound} label="Patient Summary" />
       <div className="mt-5 grid gap-3">
         <SummaryRow label="Age" value={patient.age || "--"} />
@@ -628,10 +651,10 @@ function PatientSummaryCard({ patient, bmi, bmiStatus, large = false }) {
         <SummaryRow label="Height" value={patient.height ? `${patient.height} cm` : "--"} />
         <SummaryRow label="Weight" value={patient.weight ? `${patient.weight} kg` : "--"} />
       </div>
-      <div className="mt-5 rounded-[1.5rem] border border-[#24f2bd]/20 bg-[#24f2bd]/10 p-5">
-        <p className="text-sm font-black uppercase tracking-[0.15em] text-slate-400">BMI</p>
+      <div className="mt-5 rounded-[1.75rem] bg-white/65 p-5">
+        <p className="text-sm font-black uppercase tracking-[0.15em] text-[#6A706D]">BMI</p>
         <p className="mt-2 text-5xl font-black tracking-[-0.06em]">{bmi || "--"}</p>
-        <p className="mt-2 font-black text-[#24f2bd]">{bmi ? bmiStatus : "Waiting for height / weight"}</p>
+        <p className="mt-2 font-black text-[#137A5B]">{bmi ? bmiStatus : "Waiting for height / weight"}</p>
       </div>
     </Panel>
   );
@@ -639,26 +662,36 @@ function PatientSummaryCard({ patient, bmi, bmiStatus, large = false }) {
 
 function VitalCard({ label, value, unit, tone }) {
   const critical = tone === "vf";
+  const color =
+    label === "Heart Rate"
+      ? "bg-[#BFEFF4]"
+      : label === "Pulse"
+        ? "bg-[#D9F2C7]"
+        : label === "Risk Score"
+          ? critical
+            ? "bg-[#F7D7DF]"
+            : "bg-[#FFE680]"
+          : "bg-white";
   return (
-    <article className={`rounded-[1.4rem] border p-4 ${critical ? "border-red-400/25 bg-red-500/10" : "border-white/10 bg-white/[0.055]"}`}>
-      <p className="text-sm font-black text-slate-400">{label}</p>
-      <p className={`mt-2 text-3xl font-black tracking-[-0.05em] ${critical ? "text-red-200" : "text-white"}`}>
+    <article className={`rounded-[1.75rem] p-5 shadow-[0_14px_36px_rgba(24,28,25,0.05)] ${color}`}>
+      <p className="text-sm font-black text-[#6A706D]">{label}</p>
+      <p className={`mt-2 text-3xl font-black tracking-[-0.05em] ${critical ? "text-[#9F273B]" : "text-[#0B0B0B]"}`}>
         {value}
-        {unit && <span className="ml-2 text-sm font-black text-slate-500">{unit}</span>}
+        {unit && <span className="ml-2 text-sm font-black text-[#7A807C]">{unit}</span>}
       </p>
     </article>
   );
 }
 
 function RiskBar({ label, value, inverse = false }) {
-  const color = inverse ? "bg-[#24f2bd]" : value > 85 ? "bg-red-400" : value > 60 ? "bg-yellow-300" : "bg-[#24f2bd]";
+  const color = inverse ? "bg-[#137A5B]" : value > 85 ? "bg-[#D86B7B]" : value > 60 ? "bg-[#E4B92F]" : "bg-[#137A5B]";
   return (
     <div>
       <div className="mb-2 flex justify-between text-sm font-black">
-        <span className="text-slate-300">{label}</span>
+        <span className="text-[#323735]">{label}</span>
         <span>{value}%</span>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-white/10">
+      <div className="h-3 overflow-hidden rounded-full bg-white/60">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
       </div>
     </div>
@@ -667,7 +700,7 @@ function RiskBar({ label, value, inverse = false }) {
 
 function Panel({ children, className = "" }) {
   return (
-    <section className={`rounded-[2rem] border border-white/10 bg-white/[0.07] p-5 shadow-[0_22px_70px_rgba(0,0,0,0.22)] sm:p-6 ${className}`}>
+    <section className={`rounded-[2rem] p-5 shadow-[0_24px_70px_rgba(24,28,25,0.08)] sm:p-6 ${className || "bg-white"}`}>
       {children}
     </section>
   );
@@ -675,7 +708,7 @@ function Panel({ children, className = "" }) {
 
 function SectionKicker({ icon: Icon, label }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-sm font-black text-slate-300">
+    <div className="inline-flex items-center gap-2 rounded-full bg-white/65 px-3 py-2 text-sm font-black text-[#323735]">
       <Icon size={16} strokeWidth={2.4} />
       {label}
     </div>
@@ -685,7 +718,7 @@ function SectionKicker({ icon: Icon, label }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-black text-slate-300">{label}</span>
+      <span className="mb-2 block text-sm font-black text-[#323735]">{label}</span>
       {children}
     </label>
   );
@@ -693,8 +726,8 @@ function Field({ label, children }) {
 
 function SummaryRow({ label, value }) {
   return (
-    <div className="flex items-center justify-between rounded-[1.2rem] bg-white/[0.055] px-4 py-3">
-      <span className="text-sm font-bold text-slate-400">{label}</span>
+    <div className="flex items-center justify-between rounded-[1.35rem] bg-white/60 px-4 py-3">
+      <span className="text-sm font-bold text-[#6A706D]">{label}</span>
       <strong>{value}</strong>
     </div>
   );
@@ -702,8 +735,8 @@ function SummaryRow({ label, value }) {
 
 function ReportRow({ label, value }) {
   return (
-    <div className="flex flex-col justify-between gap-1 rounded-[1.2rem] bg-white/[0.055] px-4 py-3 sm:flex-row sm:items-center">
-      <span className="text-sm font-bold text-slate-400">{label}</span>
+    <div className="flex flex-col justify-between gap-1 rounded-[1.35rem] bg-[#F7F7F7] px-4 py-3 sm:flex-row sm:items-center">
+      <span className="text-sm font-bold text-[#6A706D]">{label}</span>
       <strong className="text-right">{value}</strong>
     </div>
   );

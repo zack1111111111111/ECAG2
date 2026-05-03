@@ -4,7 +4,7 @@
 
 @layer components {
   .input {
-    @apply w-full rounded-[1.2rem] border border-white/10 bg-black/25 px-4 py-4 font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-[#24f2bd]/60 focus:ring-4 focus:ring-[#24f2bd]/10;
+    @apply w-full rounded-[1.35rem] border border-transparent bg-[#F3F4F1] px-4 py-4 font-bold text-[#0B0B0B] outline-none transition placeholder:text-[#A0A6A1] focus:border-[#BFEFF4] focus:bg-white focus:ring-4 focus:ring-[#BFEFF4]/35;
   }
 }
 
