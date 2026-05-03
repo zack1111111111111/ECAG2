@@ -1,32 +1,40 @@
-# ECAG2 Realtime ECG Frontend
+# ECAG2 Heart Wellness Landing Page
 
-This branch adds a static ECG monitor frontend and a lightweight local API
-that reads the existing `data/scenarios/*.npz` files.
+This branch adds a responsive React + Tailwind CSS website for ECAG2. The visual direction is a
+modern wellness-tech landing page: large editorial typography, soft rounded cards, clean white
+space, and pastel health dashboard modules.
+
+The page uses the existing GitHub repository data through a lightweight local API:
+
+- `data/scenarios/mit100_normal.npz`
+- `data/scenarios/mit207_severe.npz`
+- `data/scenarios/mit208_pvc.npz`
+- `data/scenarios/vf418_arrest.npz`
 
 ## Run locally
 
-Start the API:
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Start the ECG data API:
 
 ```bash
 python3 api_server.py
 ```
 
-Start the static frontend from this repository root in a second terminal:
+Start the React website in a second terminal:
 
 ```bash
-python3 -m http.server 4173
+npm run dev
 ```
 
-Open:
+Open the Vite URL shown in the terminal, usually:
 
 ```text
-http://127.0.0.1:4173
+http://127.0.0.1:5173
 ```
 
-The frontend connects to:
-
-```text
-http://127.0.0.1:8000
-```
-
-If the API is not running, the page falls back to offline mock waveform data.
+If the API is not running, the website falls back to bundled demo values.
