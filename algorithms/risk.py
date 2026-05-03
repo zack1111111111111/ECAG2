@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Risk module — single-window cardiac anomaly score.
 

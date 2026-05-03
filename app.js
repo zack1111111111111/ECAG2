@@ -1,4 +1,4 @@
-const scenarios = {
+let scenarios = {
   normal: {
     title: "Normal Sinus Rhythm",
     risk: "Low risk",
@@ -112,6 +112,13 @@ const state = {
   samples: [],
 };
 
+function normalizeBackendScenario(scenario) {
+  return {
+    ...scenario,
+    confidence: scenario.confidence || Math.round(Math.max(...scenario.probs) * 100),
+  };
+}
+
 function byId(id) {
   return document.getElementById(id);
 }
@@ -156,6 +163,13 @@ function ecgPulse(t, center, width, amplitude) {
 }
 
 function syntheticSample(key, t) {
+  const scenario = scenarios[key];
+  if (scenario.ecg && scenario.ecg.length) {
+    const fs = scenario.fs || state.sampleRate;
+    const index = Math.floor(t * fs) % scenario.ecg.length;
+    return scenario.ecg[index];
+  }
+
   const beatPeriod = key === "normal" ? 0.82 : key === "pvc" ? 0.64 : key === "severe" ? 0.54 : 0.22;
   const beat = t % beatPeriod;
   const drift = 0.05 * Math.sin(t * 2.3) + 0.025 * Math.sin(t * 9.2);
@@ -403,6 +417,8 @@ function updateReport(current) {
 
 function updateScenarioUI() {
   const current = scenarios[state.scenarioKey];
+  state.sampleRate = current.fs || 360;
+  state.duration = current.duration || 30;
   byId("scenarioTitle").textContent = current.title;
   byId("riskPill").textContent = current.risk;
   byId("riskPill").className = `risk-pill ${current.level === "normal" ? "" : current.level}`;
@@ -558,9 +574,29 @@ window.addEventListener("resize", () => {
   drawWave();
 });
 
-initProbRows();
-resizeCanvas();
-resetSamples();
-updateProfileUI();
-setPage("setup");
-tick();
+async function loadBackendScenarios() {
+  try {
+    const response = await fetch("/api/scenarios");
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+    const payload = await response.json();
+    scenarios = Object.fromEntries(
+      Object.entries(payload.scenarios).map(([key, scenario]) => [key, normalizeBackendScenario(scenario)])
+    );
+  } catch (error) {
+    console.info("Using simulated ECG fallback:", error.message);
+  }
+}
+
+async function boot() {
+  await loadBackendScenarios();
+  initProbRows();
+  resizeCanvas();
+  resetSamples();
+  updateProfileUI();
+  setPage("setup");
+  tick();
+}
+
+boot();
