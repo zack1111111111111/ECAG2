@@ -26,92 +26,194 @@
         </div>
       </header>
 
-      <details class="education-panel">
-        <summary>
-          <span>What is ECG &amp; Why it matters</span>
-          <span class="summary-caret">open</span>
-        </summary>
+      <nav class="page-tabs" aria-label="Monitoring flow">
+        <button class="page-tab active" data-page="setup" type="button">1 Setup</button>
+        <button class="page-tab" data-page="live" type="button">2 Live</button>
+        <button class="page-tab" data-page="report" type="button">3 Report</button>
+      </nav>
 
-        <div class="education-content">
-          <section class="education-copy">
-            <div class="education-item">
-              <p class="panel-kicker">Problem</p>
-              <h2>Numbers alone do not explain cardiac risk.</h2>
-              <p>
-                Most health devices only show numbers. But numbers alone are not enough to understand cardiac risk.
-              </p>
+      <section class="page-section active" id="page-setup">
+        <div class="setup-grid">
+          <section class="setup-panel">
+            <p class="eyebrow">Welcome</p>
+            <h2>Track your heart health with AI</h2>
+            <p class="setup-copy">
+              We use your profile to compare against similar individuals and make the ECG analysis easier to understand.
+            </p>
+
+            <div class="profile-form">
+              <label class="slider-field">
+                <span>Age <strong id="ageValue">42</strong></span>
+                <input id="ageSlider" type="range" min="18" max="90" value="42" />
+              </label>
+
+              <div class="segmented-field">
+                <span>Gender</span>
+                <div class="segment-control" aria-label="Gender">
+                  <button class="segment-button active" data-gender="Female" type="button">Female</button>
+                  <button class="segment-button" data-gender="Male" type="button">Male</button>
+                </div>
+              </div>
+
+              <div class="stepper-grid">
+                <div class="stepper-field">
+                  <span>Height</span>
+                  <div class="stepper-control">
+                    <button class="stepper-button" data-step="height" data-delta="-1" type="button">-</button>
+                    <strong><span id="heightValue">168</span> cm</strong>
+                    <button class="stepper-button" data-step="height" data-delta="1" type="button">+</button>
+                  </div>
+                </div>
+                <div class="stepper-field">
+                  <span>Weight</span>
+                  <div class="stepper-control">
+                    <button class="stepper-button" data-step="weight" data-delta="-1" type="button">-</button>
+                    <strong><span id="weightValue">64</span> kg</strong>
+                    <button class="stepper-button" data-step="weight" data-delta="1" type="button">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <label class="context-check">
+                <input id="knownCondition" type="checkbox" />
+                <span>Known cardiac condition</span>
+              </label>
             </div>
 
-            <div class="education-item">
-              <p class="panel-kicker">What is ECG</p>
-              <h2>ECG captures the electrical activity of the heart, not just the pulse.</h2>
-              <p>
-                This allows detection of irregular rhythms, conduction abnormalities, and early signs of arrhythmia.
-              </p>
-              <strong class="key-line">Heart rate tells you "how fast". ECG tells you "how healthy".</strong>
-            </div>
-
-            <div class="education-columns">
-              <div class="education-item">
-                <p class="panel-kicker">Industry Gap</p>
-                <h2>Existing products record data. They rarely explain risk.</h2>
-                <ul>
-                  <li>Apple Watch / Fitbit: data recording</li>
-                  <li>Limited interpretation</li>
-                  <li>Reactive alerts</li>
-                </ul>
-              </div>
-              <div class="education-item highlight">
-                <p class="panel-kicker">Our System</p>
-                <h2>Real-time ECG risk monitoring.</h2>
-                <ul>
-                  <li>Real-time ECG analysis</li>
-                  <li>AI-driven interpretation</li>
-                  <li>Early risk prediction</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="education-columns">
-              <div class="education-item">
-                <p class="panel-kicker">For Individuals</p>
-                <ul>
-                  <li>Understand heart condition in real time</li>
-                  <li>Get actionable health guidance</li>
-                  <li>Detect risks earlier</li>
-                </ul>
-              </div>
-              <div class="education-item">
-                <p class="panel-kicker">For Healthcare Providers</p>
-                <ul>
-                  <li>Monitor patients remotely</li>
-                  <li>Reduce manual analysis workload</li>
-                  <li>Improve response efficiency</li>
-                </ul>
-              </div>
+            <div class="setup-actions">
+              <button class="secondary-action" type="button">Connect Device</button>
+              <button class="primary-action" data-page-target="live" type="button">Start Monitoring</button>
             </div>
           </section>
 
-          <button class="ecg-compare" id="openEcgModal" type="button" aria-label="Open ECG versus heart rate explanation">
-            <span class="compare-title">Heart Rate vs ECG</span>
-            <span class="compare-row">
-              <span class="compare-label">Heart rate</span>
-              <span class="pulse-visual"></span>
-              <span class="compare-note">Speed</span>
-            </span>
-            <span class="compare-row">
-              <span class="compare-label">ECG</span>
-              <svg class="mini-ecg" viewBox="0 0 220 54" role="img" aria-label="Stylized ECG waveform">
-                <polyline points="0,34 34,34 43,29 51,39 61,10 72,43 84,34 126,34 136,28 146,38 157,12 168,44 180,34 220,34" />
-              </svg>
-              <span class="compare-note">Health</span>
-            </span>
-            <span class="compare-link">Click for details</span>
-          </button>
-        </div>
-      </details>
+          <details class="education-panel" open>
+            <summary>
+              <span>What is ECG &amp; Why it matters</span>
+              <span class="summary-caret">open</span>
+            </summary>
 
-      <section class="hero-grid">
+            <div class="education-content">
+              <section class="education-copy">
+                <div class="education-item">
+                  <p class="panel-kicker">Problem</p>
+                  <h2>Numbers alone do not explain cardiac risk.</h2>
+                  <p>
+                    Most health devices only show numbers. But numbers alone are not enough to understand cardiac risk.
+                  </p>
+                </div>
+
+                <div class="education-item">
+                  <p class="panel-kicker">What is ECG</p>
+                  <h2>ECG captures the electrical activity of the heart, not just the pulse.</h2>
+                  <p>
+                    This allows detection of irregular rhythms, conduction abnormalities, and early signs of arrhythmia.
+                  </p>
+                  <strong class="key-line">Heart rate tells you "how fast". ECG tells you "how healthy".</strong>
+                </div>
+
+                <div class="education-columns">
+                  <div class="education-item">
+                    <p class="panel-kicker">Industry Gap</p>
+                    <h2>Existing products record data. They rarely explain risk.</h2>
+                    <ul>
+                      <li>Apple Watch / Fitbit: data recording</li>
+                      <li>Limited interpretation</li>
+                      <li>Reactive alerts</li>
+                    </ul>
+                  </div>
+                  <div class="education-item highlight">
+                    <p class="panel-kicker">Our System</p>
+                    <h2>Real-time ECG risk monitoring.</h2>
+                    <ul>
+                      <li>Real-time ECG analysis</li>
+                      <li>AI-driven interpretation</li>
+                      <li>Early risk prediction</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="education-columns">
+                  <div class="education-item">
+                    <p class="panel-kicker">For Individuals</p>
+                    <ul>
+                      <li>Understand heart condition in real time</li>
+                      <li>Get actionable health guidance</li>
+                      <li>Detect risks earlier</li>
+                    </ul>
+                  </div>
+                  <div class="education-item">
+                    <p class="panel-kicker">For Healthcare Providers</p>
+                    <ul>
+                      <li>Monitor patients remotely</li>
+                      <li>Reduce manual analysis workload</li>
+                      <li>Improve response efficiency</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <button class="ecg-compare" id="openEcgModal" type="button" aria-label="Open ECG versus heart rate explanation">
+                <span class="compare-title">Heart Rate vs ECG</span>
+                <span class="compare-row">
+                  <span class="compare-label">Heart rate</span>
+                  <span class="pulse-visual"></span>
+                  <span class="compare-note">Speed</span>
+                </span>
+                <span class="compare-row">
+                  <span class="compare-label">ECG</span>
+                  <svg class="mini-ecg" viewBox="0 0 220 54" role="img" aria-label="Stylized ECG waveform">
+                    <polyline points="0,34 34,34 43,29 51,39 61,10 72,43 84,34 126,34 136,28 146,38 157,12 168,44 180,34 220,34" />
+                  </svg>
+                  <span class="compare-note">Health</span>
+                </span>
+                <span class="compare-link">Click for details</span>
+              </button>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="page-section" id="page-live">
+        <div class="risk-banner" id="riskBanner">
+          <div>
+            <span id="liveRiskLabel">Normal</span>
+            <strong id="liveRiskSummary">ECG pattern is stable</strong>
+          </div>
+          <button class="secondary-action" data-page-target="report" type="button">View Report</button>
+        </div>
+
+        <section class="live-product-grid">
+          <div class="comparison-panel">
+            <p class="panel-kicker">Data + Age Group Comparison</p>
+            <h2>Compared to similar individuals</h2>
+            <div class="compare-metrics" id="compareMetrics"></div>
+          </div>
+
+          <div class="heart-panel">
+            <p class="panel-kicker">Physiological Feedback</p>
+            <div class="heart-visual" id="heartVisual" aria-label="Animated heart status">
+              <div class="heart-shape"></div>
+            </div>
+            <h2 id="heartStatus">Normal cardiac rhythm</h2>
+            <p id="heartCopy">Heart animation follows the current heart-rate state and risk level.</p>
+          </div>
+        </section>
+
+        <section class="insight-action-grid">
+          <div class="ai-insight-card">
+            <p class="panel-kicker">AI Insight</p>
+            <h2 id="liveInsightTitle">Stable ECG pattern detected.</h2>
+            <p id="liveInsightCopy">Your heart rate is within the expected range for your age group.</p>
+          </div>
+          <div class="action-card">
+            <p class="panel-kicker">Recommended Action</p>
+            <ul id="liveActionList">
+              <li>Continue routine monitoring</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="hero-grid">
         <div class="wave-panel">
           <div class="panel-heading">
             <div>
@@ -213,6 +315,49 @@
         <button class="icon-button" id="playButton" aria-label="Pause realtime replay" title="Pause realtime replay">Pause</button>
         <button class="icon-button" id="resetButton" aria-label="Reset replay" title="Reset replay">Reset</button>
       </nav>
+      </section>
+
+      <section class="page-section" id="page-report">
+        <div class="report-grid">
+          <section class="report-panel summary-report">
+            <p class="panel-kicker">Heart Health Summary</p>
+            <h2 id="reportStatus">Status: Stable</h2>
+            <div class="report-risk" id="reportRisk">Risk Level: Low</div>
+          </section>
+
+          <section class="report-panel">
+            <p class="panel-kicker">Trends</p>
+            <div class="trend-list">
+              <div><span>Heart Rate Trend</span><strong id="reportHrTrend">Stable</strong></div>
+              <div><span>HRV Trend</span><strong id="reportHrvTrend">Within range</strong></div>
+            </div>
+          </section>
+
+          <section class="report-panel">
+            <p class="panel-kicker">Compared to similar individuals</p>
+            <ul id="reportCompareList">
+              <li>Heart Rate: Within normal range</li>
+              <li>HRV: Within normal range</li>
+            </ul>
+          </section>
+
+          <section class="report-panel analysis-report">
+            <p class="panel-kicker">AI Report</p>
+            <h2>Analysis</h2>
+            <p id="reportAnalysis">
+              Your ECG shows stable sinus rhythm. No significant abnormalities detected.
+            </p>
+          </section>
+
+          <section class="report-panel">
+            <p class="panel-kicker">Key Findings</p>
+            <ul id="reportFindings">
+              <li>Normal sinus rhythm</li>
+              <li>No arrhythmia detected</li>
+            </ul>
+          </section>
+        </div>
+      </section>
     </main>
 
     <dialog class="ecg-modal" id="ecgModal">

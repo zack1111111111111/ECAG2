@@ -87,10 +87,22 @@ const modeButtons = [...document.querySelectorAll(".mode-button")];
 const openEcgModal = document.querySelector("#openEcgModal");
 const closeEcgModal = document.querySelector("#closeEcgModal");
 const ecgModal = document.querySelector("#ecgModal");
+const pageTabs = [...document.querySelectorAll(".page-tab")];
+const pageTargets = [...document.querySelectorAll("[data-page-target]")];
+const ageSlider = document.querySelector("#ageSlider");
+const segmentButtons = [...document.querySelectorAll(".segment-button")];
+const stepperButtons = [...document.querySelectorAll(".stepper-button")];
 
 const state = {
   scenarioKey: "normal",
   mode: "clinician",
+  page: "setup",
+  profile: {
+    age: 42,
+    gender: "Female",
+    height: 168,
+    weight: 64,
+  },
   paused: false,
   sampleRate: 360,
   duration: 30,
@@ -102,6 +114,24 @@ const state = {
 
 function byId(id) {
   return document.getElementById(id);
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function setPage(page) {
+  state.page = page;
+  document.querySelectorAll(".page-section").forEach((section) => {
+    section.classList.toggle("active", section.id === `page-${page}`);
+  });
+  pageTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.page === page);
+  });
+  if (page === "live") {
+    resizeCanvas();
+    drawWave();
+  }
 }
 
 function initProbRows() {
@@ -249,6 +279,128 @@ function confidenceClass(confidence) {
   return "low";
 }
 
+function comparisonModel(current) {
+  return [
+    {
+      key: "hr",
+      label: "Heart Rate",
+      value: current.hr,
+      unit: "bpm",
+      min: 60,
+      max: state.profile.age > 60 ? 95 : 100,
+      caption: current.hr > 100 ? "Above normal range" : current.hr < 60 ? "Below normal range" : "Within normal range",
+    },
+    {
+      key: "hrv",
+      label: "HRV",
+      value: current.hrv,
+      unit: "ms",
+      min: state.profile.age > 60 ? 25 : 35,
+      max: state.profile.age > 60 ? 70 : 80,
+      caption: current.hrv < 35 ? "Below similar group" : current.hrv > 80 ? "Above similar group" : "Within normal range",
+    },
+    {
+      key: "rPeak",
+      label: "R-peak",
+      value: current.rPeak,
+      unit: "mV",
+      min: 0.8,
+      max: 1.6,
+      caption: current.rPeak < 0.8 ? "Low signal amplitude" : current.rPeak > 1.6 ? "Above typical amplitude" : "Within expected amplitude",
+    },
+  ];
+}
+
+function renderComparison(current) {
+  const rows = comparisonModel(current);
+  byId("compareMetrics").innerHTML = rows
+    .map((metric) => {
+      const expandedMin = metric.min - (metric.max - metric.min) * 0.35;
+      const expandedMax = metric.max + (metric.max - metric.min) * 0.35;
+      const marker = clamp(((metric.value - expandedMin) / (expandedMax - expandedMin)) * 100, 0, 100);
+      const displayValue = metric.key === "rPeak" ? metric.value.toFixed(2) : metric.value;
+      return `
+        <article class="range-card">
+          <header>
+            <h3>${metric.label}</h3>
+            <strong>${displayValue} ${metric.unit}</strong>
+          </header>
+          <div class="range-track">
+            <span class="range-marker" style="left: ${marker}%"></span>
+          </div>
+          <div class="range-labels">
+            <span>${metric.min} ${metric.unit}</span>
+            <span>You</span>
+            <span>${metric.max} ${metric.unit}</span>
+          </div>
+          <div class="range-caption">${metric.caption}</div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function updateHeartAnimation(current) {
+  const heart = byId("heartVisual");
+  const speed = current.hr > 0 ? clamp(60 / current.hr, 0.38, 1.2) : 0.5;
+  heart.style.setProperty("--heart-speed", `${speed}s`);
+  heart.className = `heart-visual ${current.level === "normal" ? "" : current.level}`;
+  byId("heartStatus").textContent =
+    current.level === "critical" ? "Severe rhythm instability" : current.level === "warning" ? "Elevated cardiac strain" : "Normal cardiac rhythm";
+  byId("heartCopy").textContent =
+    current.level === "critical"
+      ? "The animation accelerates and turns red when the system detects severe rhythm risk."
+      : current.level === "warning"
+        ? "The animation shifts yellow to show elevated risk while monitoring continues."
+        : "The animation stays green when rhythm and rate remain within expected bounds.";
+}
+
+function updateLiveInsight(current) {
+  byId("liveRiskLabel").textContent = current.risk;
+  byId("liveRiskSummary").textContent =
+    current.level === "critical" ? "Immediate attention may be required" : current.level === "warning" ? "ECG pattern requires closer monitoring" : "ECG pattern is stable";
+  byId("riskBanner").className = `risk-banner ${current.level === "normal" ? "" : current.level}`;
+  byId("liveInsightTitle").textContent =
+    current.level === "normal" ? "Stable ECG pattern detected." : current.level === "warning" ? "Irregular pattern requires attention." : "Critical rhythm pattern detected.";
+  byId("liveInsightCopy").textContent =
+    current.level === "normal"
+      ? "Your heart rate is within the expected range for your age group."
+      : current.level === "warning"
+        ? "Irregular rhythm detected. Your heart rate is above the normal range for your age group."
+        : "The ECG waveform shows severe instability and loss of organized rhythm.";
+  byId("liveActionList").innerHTML = current.actions.map((action) => `<li>${action}</li>`).join("");
+}
+
+function updateReport(current) {
+  byId("reportStatus").textContent =
+    current.level === "normal" ? "Status: Stable" : current.level === "warning" ? "Status: Needs Attention" : "Status: Critical";
+  byId("reportRisk").textContent = `Risk Level: ${current.risk}`;
+  byId("reportRisk").className = `report-risk ${current.level === "normal" ? "" : current.level}`;
+  byId("reportHrTrend").textContent = current.trends.hr > 0 ? `Rising ${trendText(current.trends.hr)}` : current.trends.hr < 0 ? `Falling ${trendText(current.trends.hr)}` : "Stable";
+  byId("reportHrvTrend").textContent = current.trends.hrv > 0 ? `Rising ${trendText(current.trends.hrv)}` : current.trends.hrv < 0 ? `Falling ${trendText(current.trends.hrv)}` : "Stable";
+
+  const comparisons = comparisonModel(current);
+  byId("reportCompareList").innerHTML = comparisons
+    .slice(0, 2)
+    .map((metric) => `<li>${metric.label}: ${metric.caption}</li>`)
+    .join("");
+
+  byId("reportAnalysis").textContent =
+    current.level === "normal"
+      ? "Your ECG shows stable sinus rhythm. No significant abnormalities detected. Minor variability observed, within normal limits."
+      : current.level === "warning"
+        ? "Your ECG shows rhythm irregularity and elevated cardiac strain. Continued monitoring and clinical follow-up are recommended if this pattern persists."
+        : "Your ECG shows a critical abnormal rhythm pattern. Immediate clinical assessment is recommended.";
+
+  const findings =
+    current.level === "normal"
+      ? ["Normal sinus rhythm", "No arrhythmia detected"]
+      : current.level === "warning"
+        ? ["Irregular rhythm detected", "Heart rate above age-group range", "Clinical follow-up recommended if persistent"]
+        : ["Severe rhythm instability", "No organized R-peak pattern", "Emergency response recommended"];
+  byId("reportFindings").innerHTML = findings.map((finding) => `<li>${finding}</li>`).join("");
+}
+
 function updateScenarioUI() {
   const current = scenarios[state.scenarioKey];
   byId("scenarioTitle").textContent = current.title;
@@ -283,7 +435,21 @@ function updateScenarioUI() {
   modeButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.mode === state.mode);
   });
+  renderComparison(current);
+  updateHeartAnimation(current);
+  updateLiveInsight(current);
+  updateReport(current);
   updateProbabilities();
+}
+
+function updateProfileUI() {
+  byId("ageValue").textContent = state.profile.age;
+  byId("heightValue").textContent = state.profile.height;
+  byId("weightValue").textContent = state.profile.weight;
+  segmentButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.gender === state.profile.gender);
+  });
+  updateScenarioUI();
 }
 
 function resetSamples() {
@@ -338,6 +504,41 @@ modeButtons.forEach((button) => {
   });
 });
 
+pageTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setPage(tab.dataset.page);
+  });
+});
+
+pageTargets.forEach((button) => {
+  button.addEventListener("click", () => {
+    setPage(button.dataset.pageTarget);
+  });
+});
+
+ageSlider.addEventListener("input", () => {
+  state.profile.age = Number(ageSlider.value);
+  updateProfileUI();
+});
+
+segmentButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.profile.gender = button.dataset.gender;
+    updateProfileUI();
+  });
+});
+
+stepperButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const key = button.dataset.step;
+    const delta = Number(button.dataset.delta);
+    const min = key === "height" ? 120 : 35;
+    const max = key === "height" ? 220 : 180;
+    state.profile[key] = clamp(state.profile[key] + delta, min, max);
+    updateProfileUI();
+  });
+});
+
 openEcgModal.addEventListener("click", () => {
   ecgModal.showModal();
 });
@@ -360,5 +561,6 @@ window.addEventListener("resize", () => {
 initProbRows();
 resizeCanvas();
 resetSamples();
-updateScenarioUI();
+updateProfileUI();
+setPage("setup");
 tick();
