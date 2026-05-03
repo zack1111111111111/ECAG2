@@ -198,10 +198,10 @@ function resizeCanvas() {
 
 function drawGrid(width, height) {
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "#061113";
+  ctx.fillStyle = "#f7fbfb";
   ctx.fillRect(0, 0, width, height);
 
-  ctx.strokeStyle = "rgba(40, 226, 178, 0.08)";
+  ctx.strokeStyle = "rgba(18, 18, 18, 0.06)";
   ctx.lineWidth = 1;
   for (let x = 0; x <= width; x += 32) {
     ctx.beginPath();
@@ -216,7 +216,7 @@ function drawGrid(width, height) {
     ctx.stroke();
   }
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+  ctx.strokeStyle = "rgba(18, 18, 18, 0.16)";
   ctx.beginPath();
   ctx.moveTo(0, height / 2);
   ctx.lineTo(width, height / 2);
@@ -240,7 +240,7 @@ function drawWave() {
     if (index === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   });
-  ctx.strokeStyle = current.level === "critical" ? "#ff5c63" : "#28e2b2";
+  ctx.strokeStyle = current.level === "critical" ? "#ff8a6b" : current.level === "warning" ? "#d0b545" : "#111111";
   ctx.lineWidth = 2;
   ctx.shadowColor = ctx.strokeStyle;
   ctx.shadowBlur = 9;
