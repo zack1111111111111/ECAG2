@@ -446,6 +446,110 @@ input[type="range"] {
   gap: 14px;
 }
 
+.education-simple {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 0 18px 18px;
+}
+
+.heart-education-card {
+  display: grid;
+  min-height: 360px;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  border: 0;
+  border-radius: 34px;
+  background: var(--accent);
+  color: var(--green-ink);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.heart-education-card:hover {
+  background: #d9f1ca;
+}
+
+.heart-education-icon {
+  display: grid;
+  width: min(260px, 80%);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.heart-education-icon svg {
+  width: 86%;
+  height: 86%;
+}
+
+.heart-organ {
+  fill: #ffffff;
+  stroke: rgba(17, 17, 17, 0.16);
+  stroke-width: 3;
+}
+
+.heart-ecg-line {
+  fill: none;
+  stroke: #111111;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 8;
+}
+
+.heart-education-icon circle {
+  fill: none;
+  stroke: rgba(17, 17, 17, 0.06);
+  stroke-width: 16;
+}
+
+.education-meaning {
+  display: grid;
+  align-content: center;
+  padding: 24px;
+  border-radius: 34px;
+  background: #ffffff;
+}
+
+.education-meaning h2 {
+  max-width: 620px;
+  margin-bottom: 12px;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.education-meaning p {
+  max-width: 600px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.education-meaning strong {
+  display: block;
+  max-width: 620px;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+.meaning-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.meaning-list span {
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--accent-2);
+  color: var(--blue-ink);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
 .ecg-compare {
   flex: 0 0 360px;
   display: grid;
@@ -1240,6 +1344,10 @@ canvas {
 
   .education-content {
     flex-direction: column;
+  }
+
+  .education-simple {
+    grid-template-columns: 1fr;
   }
 
   .ecg-compare {

@@ -92,82 +92,31 @@
               <span class="summary-caret">open</span>
             </summary>
 
-            <div class="education-content">
-              <section class="education-copy">
-                <div class="education-item">
-                  <p class="panel-kicker">Problem</p>
-                  <h2>Numbers alone do not explain cardiac risk.</h2>
-                  <p>
-                    Most health devices only show numbers. But numbers alone are not enough to understand cardiac risk.
-                  </p>
-                </div>
-
-                <div class="education-item">
-                  <p class="panel-kicker">What is ECG</p>
-                  <h2>ECG captures the electrical activity of the heart, not just the pulse.</h2>
-                  <p>
-                    This allows detection of irregular rhythms, conduction abnormalities, and early signs of arrhythmia.
-                  </p>
-                  <strong class="key-line">Heart rate tells you "how fast". ECG tells you "how healthy".</strong>
-                </div>
-
-                <div class="education-columns">
-                  <div class="education-item">
-                    <p class="panel-kicker">Industry Gap</p>
-                    <h2>Existing products record data. They rarely explain risk.</h2>
-                    <ul>
-                      <li>Apple Watch / Fitbit: data recording</li>
-                      <li>Limited interpretation</li>
-                      <li>Reactive alerts</li>
-                    </ul>
-                  </div>
-                  <div class="education-item highlight">
-                    <p class="panel-kicker">Our System</p>
-                    <h2>Real-time ECG risk monitoring.</h2>
-                    <ul>
-                      <li>Real-time ECG analysis</li>
-                      <li>AI-driven interpretation</li>
-                      <li>Early risk prediction</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="education-columns">
-                  <div class="education-item">
-                    <p class="panel-kicker">For Individuals</p>
-                    <ul>
-                      <li>Understand heart condition in real time</li>
-                      <li>Get actionable health guidance</li>
-                      <li>Detect risks earlier</li>
-                    </ul>
-                  </div>
-                  <div class="education-item">
-                    <p class="panel-kicker">For Healthcare Providers</p>
-                    <ul>
-                      <li>Monitor patients remotely</li>
-                      <li>Reduce manual analysis workload</li>
-                      <li>Improve response efficiency</li>
-                    </ul>
-                  </div>
-                </div>
-              </section>
-
-              <button class="ecg-compare" id="openEcgModal" type="button" aria-label="Open ECG versus heart rate explanation">
-                <span class="compare-title">Heart Rate vs ECG</span>
-                <span class="compare-row">
-                  <span class="compare-label">Heart rate</span>
-                  <span class="pulse-visual"></span>
-                  <span class="compare-note">Speed</span>
-                </span>
-                <span class="compare-row">
-                  <span class="compare-label">ECG</span>
-                  <svg class="mini-ecg" viewBox="0 0 220 54" role="img" aria-label="Stylized ECG waveform">
-                    <polyline points="0,34 34,34 43,29 51,39 61,10 72,43 84,34 126,34 136,28 146,38 157,12 168,44 180,34 220,34" />
+            <div class="education-simple">
+              <button class="heart-education-card" id="openEcgModal" type="button" aria-label="Open ECG versus heart rate explanation">
+                <span class="heart-education-icon">
+                  <svg viewBox="0 0 260 260" role="img" aria-label="Heart with ECG line">
+                    <path class="heart-organ" d="M130 222 C84 184 48 154 48 110 C48 78 70 56 99 56 C116 56 126 64 130 74 C134 64 144 56 161 56 C190 56 212 78 212 110 C212 154 176 184 130 222 Z" />
+                    <path class="heart-ecg-line" d="M42 137 H84 L94 122 L108 160 L126 96 L145 145 H218" />
+                    <circle cx="130" cy="130" r="92" />
                   </svg>
-                  <span class="compare-note">Health</span>
                 </span>
                 <span class="compare-link">Click for details</span>
               </button>
+
+              <section class="education-meaning">
+                <p class="panel-kicker">Why it matters</p>
+                <h2>ECG helps you understand risk, not just record numbers.</h2>
+                <p>
+                  ECG captures the electrical activity of the heart, not just the pulse.
+                </p>
+                <strong>Heart rate tells you "how fast". ECG tells you "how healthy".</strong>
+                <div class="meaning-list">
+                  <span>Irregular rhythms</span>
+                  <span>Conduction abnormalities</span>
+                  <span>Early arrhythmia signs</span>
+                </div>
+              </section>
             </div>
           </details>
         </div>
